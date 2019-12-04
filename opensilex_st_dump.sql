@@ -42,16 +42,6 @@ CREATE EXTENSION IF NOT EXISTS postgis WITH SCHEMA public;
 COMMENT ON EXTENSION postgis IS 'PostGIS geometry, geography, and raster spatial types and functions';
 
 
---
--- Name: project_users_relation_type; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.project_users_relation_type AS ENUM (
-    'scientific_contact',
-    'administrative_contact',
-    'project_coordinator'
-);
-
 
 --
 -- Name: trial_users_relation_type; Type: TYPE; Schema: public; Owner: -
@@ -99,26 +89,6 @@ CREATE TABLE public.at_group_users (
 );
 
 
---
--- Name: at_project_project; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.at_project_project (
-    uri_project character varying(300) NOT NULL,
-    uri_parent_project character varying(300) NOT NULL
-);
-
-
---
--- Name: at_project_users; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.at_project_users (
-    project_uri character varying(300) NOT NULL,
-    users_email character varying(255) NOT NULL,
-    type character varying(300) NOT NULL
-);
-
 
 --
 -- Name: at_trial_project; Type: TABLE; Schema: public; Owner: -
@@ -152,27 +122,6 @@ CREATE TABLE public."group" (
     uri character varying(200) NOT NULL
 );
 
-
---
--- Name: project; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.project (
-    uri character varying(300) NOT NULL,
-    name character varying(200) NOT NULL,
-    acronyme character varying(200),
-    subproject_type character varying(200),
-    financial_support character varying(200),
-    financial_name character varying(200),
-    date_start date NOT NULL,
-    date_end date,
-    keywords character varying(500),
-    description text,
-    objective character varying(256),
-    parent_project character varying(300),
-    website character varying(300),
-    type character varying(100)
-);
 
 
 --
@@ -249,21 +198,6 @@ COPY public.at_group_users (users_email, group_uri) FROM stdin;
 \.
 
 
---
--- Data for Name: at_project_project; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.at_project_project (uri_project, uri_parent_project) FROM stdin;
-\.
-
-
---
--- Data for Name: at_project_users; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.at_project_users (project_uri, users_email, type) FROM stdin;
-\.
-
 
 --
 -- Data for Name: at_trial_project; Type: TABLE DATA; Schema: public; Owner: -
@@ -288,13 +222,6 @@ COPY public.at_trial_users (trial_uri, users_email, type) FROM stdin;
 COPY public."group" (name, level, description, uri) FROM stdin;
 \.
 
-
---
--- Data for Name: project; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.project (uri, name, acronyme, subproject_type, financial_support, financial_name, date_start, date_end, keywords, description, objective, parent_project, website, type) FROM stdin;
-\.
 
 
 --
@@ -340,30 +267,6 @@ ALTER TABLE ONLY public.agronomical_object
 
 
 --
--- Name: at_project_project_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.at_project_project
-    ADD CONSTRAINT at_project_project_pkey PRIMARY KEY (uri_project, uri_parent_project);
-
-
---
--- Name: at_project_users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.at_project_users
-    ADD CONSTRAINT at_project_users_pkey PRIMARY KEY (project_uri, users_email, type);
-
-
---
--- Name: at_trial_project_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.at_trial_project
-    ADD CONSTRAINT at_trial_project_pkey PRIMARY KEY (project_uri, trial_uri);
-
-
---
 -- Name: at_trial_users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -393,14 +296,6 @@ ALTER TABLE ONLY public.at_group_trial
 
 ALTER TABLE ONLY public.at_group_users
     ADD CONSTRAINT pk_group_users PRIMARY KEY (group_uri, users_email);
-
-
---
--- Name: project_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.project
-    ADD CONSTRAINT project_pkey PRIMARY KEY (uri);
 
 
 --
@@ -449,30 +344,6 @@ ALTER TABLE ONLY public.at_group_users
 
 ALTER TABLE ONLY public.at_group_users
     ADD CONSTRAINT at_group_users_users_email_fkey FOREIGN KEY (users_email) REFERENCES public.users(email);
-
-
---
--- Name: at_project_project_uri_parent_project_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.at_project_project
-    ADD CONSTRAINT at_project_project_uri_parent_project_fkey FOREIGN KEY (uri_parent_project) REFERENCES public.project(uri);
-
-
---
--- Name: at_project_project_uri_project_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.at_project_project
-    ADD CONSTRAINT at_project_project_uri_project_fkey FOREIGN KEY (uri_project) REFERENCES public.project(uri);
-
-
---
--- Name: at_project_users_users_email_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.at_project_users
-    ADD CONSTRAINT at_project_users_users_email_fkey FOREIGN KEY (users_email) REFERENCES public.users(email);
 
 
 --
